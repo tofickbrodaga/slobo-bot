@@ -28,6 +28,7 @@ async def profile_message(message: Message, state: FSMContext) -> None:
     await message.delete()
 
 
+@router.callback_query(PublicBusket.showing_popular, F.data == settings.RETURN_BACK_QUERY)
 @router.callback_query(PublicBusket.showing_random, F.data == settings.RETURN_BACK_QUERY)
 async def profile_query(query: CallbackQuery, state: FSMContext) -> None:
     await query.answer()

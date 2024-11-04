@@ -18,8 +18,8 @@ KEYBOARD = InlineKeyboardMarkup(
         ],
         [
             InlineKeyboardButton(
-                text=settings.MOST_POPUAR_MEME_BUTTON,
-                callback_data=settings.MOST_POPUAR_MEME_QUERY,
+                text=settings.POPULAR_MEME_BUTTON,
+                callback_data=settings.POPULAR_MEME_QUERY,
             )
         ],
         [
