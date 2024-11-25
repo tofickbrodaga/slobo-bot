@@ -1,23 +1,22 @@
-from aio_pika import connect, Message
-from dotenv import load_dotenv
-from os import getenv
 import asyncio
+import json
+from aio_pika import connect, Message
+from config.settings import settings
 
-load_dotenv()
-
-async def main():
-    connection = await connect(host='127.0.0.1', login = getenv('RABBIT_DEFAULT_USER'), password=getenv('RABBIT_DEFAULT_PASS'), port=int(getenv('RABBIT_PORT')) )
+async def send_message(connection, message_data):
     async with connection:
         channel = await connection.channel()
-        queue = await channel.declare_queue("send_")
         await channel.default_exchange.publish(
-            Message(b"Hello World!"),
-            routing_key=queue.name,
+            Message(body=json.dumps(message_data).encode()),
+            routing_key='test_queue',
         )
-        print(" [x] Sent 'Hello World!'")
+        print("Сообщение отправлено:", message_data)
 
+async def main():
+    connection = await connect(settings.rabbit_url)
 
+    await send_message(connection, {"type": "add_to_favorites", "user_id": 1, "meme_uuid": "uuid-123"})
+    await send_message(connection, {"type": "open_meme", "meme_uuid": "uuid-123"})
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     asyncio.run(main())
